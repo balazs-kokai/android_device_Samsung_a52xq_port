@@ -1,4 +1,4 @@
-# Copyright (c) 2009-2012, 2014-2018, The Linux Foundation. All rights reserved.
+# Copyright (c) 2017-2018,2020 The Linux Foundation. All rights reserved.
 #
 # Redistribution and use in source and binary forms, with or without
 # modification, are permitted provided that the following conditions are met:
@@ -25,59 +25,14 @@
 # ADVISED OF THE POSSIBILITY OF SUCH DAMAGE.
 #
 
-import /init.recovery.qcom_decrypt.rc
-
-on early-init
-    start fstab_fixup
-
 on init
-    start load_modules
+    write /sys/class/backlight/panel0-backlight/brightness 200
+    setprop sys.usb.configfs 1
 
-on boot
-    start health-hal-2-1
+on property:ro.boot.usbcontroller=*
+    setprop sys.usb.controller ${ro.boot.usbcontroller}
+    write /sys/class/udc/${ro.boot.usbcontroller}/device/../mode peripheral
 
 on fs
     wait /dev/block/platform/soc/${ro.boot.bootdevice}
     symlink /dev/block/platform/soc/${ro.boot.bootdevice} /dev/block/bootdevice
-    export LD_LIBRARY_PATH /sbin:/vendor/lib64:/vendor/lib64/hw
-    setprop ro.board.platform lito
-
-on post-fs
-    start boot-hal-1-1
-
-on property:ro.crypto.type=file
-    setprop ro.crypto.state encrypted
-    setprop twrp.apex.loaded true
-
-# Trigger for Touchscreen
-on property:crypto.ready=1 && property:hwservicemanager.ready=true
-    start load_touch
-
-# Prop to reset Touchscreen
-on property:touch.fw.loaded=1
-    write /sys/class/touchscreen/ft8756/reset "1"
-
-# Fastbootd Touchscreen
-on property:sys.usb.config=fastboot
-    start load_touch
-
-service load_modules /system/bin/load_modules.sh
-    oneshot
-    disabled
-    user root
-    group root
-    seclabel u:r:recovery:s0
-
-service load_touch /system/bin/load_touch.sh
-    oneshot
-    disabled
-    user root
-    group root
-    seclabel u:r:recovery:s0
-
-service fstab_fixup /system/bin/fstab_fixup.sh
-    oneshot
-    disabled
-    user root
-    group root
-    seclabel u:r:recovery:s0
