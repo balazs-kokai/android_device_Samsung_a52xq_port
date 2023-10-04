@@ -87,8 +87,8 @@ BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
 TARGET_KERNEL_VERSION := 4.19
 TARGET_KERNEL_ARCH := arm64
 TARGET_KERNEL_CLANG_COMPILE := true
-TARGET_KERNEL_CONFIG := vendor/kiev_defconfig
-TARGET_KERNEL_SOURCE := kernel/motorola/sm7250
+TARGET_KERNEL_CONFIG := vendor/a52xq_defconfig
+TARGET_KERNEL_SOURCE := kernel/samsung/sm7250
 TARGET_KERNEL_ADDITIONAL_FLAGS += \
     DTC_PREBUILT=true \
     DTC=$(shell pwd)/prebuilts/misc/$(HOST_OS)-x86/dtc/dtc \
@@ -108,7 +108,7 @@ BOARD_USERDATAIMAGE_FILE_SYSTEM_TYPE := f2fs
 
 # Super
 BOARD_SUPER_PARTITION_SIZE := 8690597888
-BOARD_SUPER_PARTITION_GROUPS := motorola_dynamic_partitions
+BOARD_SUPER_PARTITION_GROUPS := samsung_dynamic_partitions
 BOARD_MOTOROLA_DYNAMIC_PARTITIONS_SIZE := 4341104640
 BOARD_MOTOROLA_DYNAMIC_PARTITIONS_PARTITION_LIST := \
     system \
@@ -145,8 +145,6 @@ TW_INPUT_BLACKLIST := "hbtp_vm"
 TW_MAX_BRIGHTNESS := 255
 TW_DEFAULT_BRIGHTNESS := 120
 TW_THEME := portrait_hdpi
-TARGET_USE_CUSTOM_LUN_FILE_PATH := "/config/usb_gadget/g1/functions/mass_storage.0/lun.%d/file"
-TW_CUSTOM_BATTERY_PATH := "/sys/class/power_supply/qcom_battery"
 TW_NO_SCREEN_BLANK := true
 
 TW_OVERRIDE_SYSTEM_PROPS := \
