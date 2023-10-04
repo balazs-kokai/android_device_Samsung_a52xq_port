@@ -23,7 +23,7 @@
 # *not* include it on all devices, so it is safe even with hardware-specific
 # components.
 
-DEVICE_PATH := device/motorola/kiev
+DEVICE_PATH := device/samsung/a52xq
 
 # Bootloader
 TARGET_BOOTLOADER_BOARD_NAME := lito
@@ -57,43 +57,21 @@ TARGET_USES_HARDWARE_QCOM_BOOTCTRL := true
 BOARD_PROVIDES_GPTUTILS := true
 
 # Kernel
-BOARD_BOOT_HEADER_VERSION := 2
+BOARD_BOOTIMG_HEADER_VERSION := 2
 BOARD_KERNEL_BASE := 0x00000000
-BOARD_KERNEL_CMDLINE += \
-    console=ttyMSM0,115200,n8  \
-    earlycon=msm_geni_serial,0x888000 \
-    androidboot.hardware=qcom androidboot.console=ttyMSM0 \
-    androidboot.memcg=1 \
-    lpm_levels.sleep_disabled=1 \
-    video=vfb:640x400,bpp=32,memsize=3072000 \
-    msm_rtb.filter=0x237  \
-    service_locator.enable=1 \
-    androidboot.usbcontroller=a600000.dwc3 \
-    swiotlb=2048 \
-    loop.max_part=7 \
-    cgroup.memory=nokmem,nosocket \
-    androidboot.boot_devices=soc/1d84000.ufshc \
-    firmware_class.path=/vendor/firmware_mnt/image
-# For the love of all that is holy, please do not include this in your ROM unless you really want TWRP to not work correctly!
-BOARD_KERNEL_CMDLINE += androidboot.fastboot=1
-BOARD_KERNEL_CMDLINE += androidboot.selinux=permissive
-
-BOARD_INCLUDE_DTB_IN_BOOTIMG := true
-BOARD_KERNEL_IMAGE_NAME := Image
+BOARD_KERNEL_CMDLINE := console=null androidboot.hardware=qcom androidboot.memcg=1 lpm_levels.sleep_disabled=1 video=vfb:640x400,bpp=32,memsize=3072000 msm_rtb.filter=0x237 service_locator.enable=1 androidboot.usbcontroller=a600000.dwc3 swiotlb=2048 cgroup.memory=nokmem,nosocket firmware_class.path=/vendor/firmware_mnt/image loop.max_part=7
 BOARD_KERNEL_PAGESIZE := 4096
+BOARD_RAMDISK_OFFSET := 0x02000000
+BOARD_KERNEL_TAGS_OFFSET := 0x01e00000
+BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOTIMG_HEADER_VERSION)
+BOARD_MKBOOTIMG_ARGS += --ramdisk_offset $(BOARD_RAMDISK_OFFSET)
+BOARD_MKBOOTIMG_ARGS += --tags_offset $(BOARD_KERNEL_TAGS_OFFSET)
+BOARD_KERNEL_IMAGE_NAME := Image
+BOARD_INCLUDE_DTB_IN_BOOTIMG := true
 BOARD_KERNEL_SEPARATED_DTBO := true
-BOARD_MKBOOTIMG_ARGS += --header_version $(BOARD_BOOT_HEADER_VERSION)
+TARGET_KERNEL_CONFIG := a52xq_defconfig
+TARGET_KERNEL_SOURCE := kernel/samsung/a52xq
 
-TARGET_KERNEL_VERSION := 4.19
-TARGET_KERNEL_ARCH := arm64
-TARGET_KERNEL_CLANG_COMPILE := true
-TARGET_KERNEL_CONFIG := vendor/a52xq_defconfig
-TARGET_KERNEL_SOURCE := kernel/samsung/sm7250
-TARGET_KERNEL_ADDITIONAL_FLAGS += \
-    DTC_PREBUILT=true \
-    DTC=$(shell pwd)/prebuilts/misc/$(HOST_OS)-x86/dtc/dtc \
-    DTC_OVERLAY_TEST_EXT=$(shell pwd)/prebuilts/misc/$(HOST_OS)-x86/libufdt/ufdt_apply_overlay \
-    MKDTIMG=$(shell pwd)/prebuilts/misc/$(HOST_OS)-x86/libufdt/mkdtimg
 
 # Partitions
 BOARD_BOOTIMAGE_PARTITION_SIZE := 100663296     #    98304
@@ -199,7 +177,6 @@ TW_HAS_EDL_MODE := true
 
 # Asian region languages
 TW_EXTRA_LANGUAGES := true
-# TW_DEFAULT_LANGUAGE := zh_CN
 
 # Notch Offset
 TW_Y_OFFSET := 100
